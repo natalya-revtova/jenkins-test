@@ -1,0 +1,10 @@
+#!groovy
+
+node('master') {
+    stage('Build') {
+        sh 'echo build app'
+    }
+    stage('Test') {
+        sh 'echo test app'
+    }
+}
