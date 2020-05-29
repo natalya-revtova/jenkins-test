@@ -58,7 +58,7 @@ func walk(tree Tree, symCodes map[rune]string, prefix []byte) {
 	}
 }
 
-func encode(sourceStr string) (string, map[rune]string) {
+func Encode(sourceStr string) (string, map[rune]string) {
 	var tree treeHeap
 	symCodes := make(map[rune]string)
 	symFreqs := make(map[rune]int)
@@ -92,7 +92,7 @@ func encode(sourceStr string) (string, map[rune]string) {
 	return encodedStr, symCodes
 }
 
-func decode(encodedStr string, symCodes map[rune]string) string {
+func Decode(encodedStr string, symCodes map[rune]string) string {
 	var decodedStr string
 	codes := make(map[string]string)
 
