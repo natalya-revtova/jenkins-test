@@ -4,13 +4,15 @@ import (
 	"fmt"
 	"os"
 	"time"
+
+	"github.com/natalya-revtova/jenkins-test/huffman"
 )
 
 func main() {
 	t0 := time.Now()
 	sourceStr := os.Args[1]
 
-	encodedStr, symCodes := encode(sourceStr)
+	encodedStr, symCodes := huffman.Encode(sourceStr)
 
 	for ch, code := range symCodes {
 		fmt.Println(string(ch) + ":", code)
