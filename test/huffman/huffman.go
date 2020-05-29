@@ -54,7 +54,6 @@ func walk(tree Tree, symCodes map[rune]string, prefix []byte) {
 
 		prefix = append(prefix, '1')
 		walk(i.right, symCodes, prefix)
-		prefix = prefix[:len(prefix)-1]
 	}
 }
 
@@ -77,7 +76,7 @@ func Encode(sourceStr string) (string, map[rune]string) {
 		heap.Push(&tree, Node{a.Freq() + b.Freq(), a, b})
 	}
 	if len(symFreqs) == 1 {
-		for ch, _ := range symFreqs {
+		for ch := range symFreqs {
 			symCodes[ch] = "0"
 		}
 	} else {

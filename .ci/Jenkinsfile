@@ -1,6 +1,9 @@
 #!groovy
 
 node('master') {
+    stage('Install Dependencies') {
+        sh 'echo install dependencies'
+    }
     stage('Build') {
         sh 'echo build app'
     }
