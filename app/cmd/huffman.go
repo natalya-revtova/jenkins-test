@@ -3,6 +3,7 @@ package main
 import (
 	"container/heap"
 	"fmt"
+	"os"
 	"time"
 )
 
@@ -44,26 +45,24 @@ func (th *treeHeap) Pop() (popped interface{}) {
 }
 func (th treeHeap) Swap(i, j int) { th[i], th[j] = th[j], th[i] }
 
-var symCodes = make(map[rune]string)
-
-func walk(tree HuffmanTree, prefix []byte) {
+func walk(tree HuffmanTree, symCodes map[rune]string, prefix []byte) {
 	switch i := tree.(type) {
 	case HuffmanLeaf:
 		symCodes[i.value] = string(prefix)
 	case HuffmanNode:
 		prefix = append(prefix, '0')
-		walk(i.left, prefix)
+		walk(i.left, symCodes, prefix)
 		prefix = prefix[:len(prefix)-1]
 
 		prefix = append(prefix, '1')
-		walk(i.right, prefix)
+		walk(i.right, symCodes, prefix)
 		prefix = prefix[:len(prefix)-1]
 	}
 }
 
-func encode(sourceStr string) string {
+func encode(sourceStr string) (string, map[rune]string) {
 	var tree treeHeap
-
+	symCodes := make(map[rune]string)
 	symFreqs := make(map[rune]int)
 	for _, ch := range sourceStr {
 		symFreqs[ch]++
@@ -84,7 +83,7 @@ func encode(sourceStr string) string {
 			symCodes[ch] = "0"
 		}
 	} else {
-		walk(heap.Pop(&tree).(HuffmanTree), []byte{})
+		walk(heap.Pop(&tree).(HuffmanTree), symCodes, []byte{})
 	}
 	var encodedStr string
 	for _, ch := range sourceStr {
@@ -92,10 +91,10 @@ func encode(sourceStr string) string {
 	}
 	fmt.Println(len(symFreqs), len(encodedStr))
 
-	return encodedStr
+	return encodedStr, symCodes
 }
 
-func decode(encodedStr string) string {
+func decode(encodedStr string, symCodes map[rune]string) string {
 	var decodedStr string
 	codes := make(map[string]string)
 
@@ -119,18 +118,13 @@ func decode(encodedStr string) string {
 
 func main() {
 	t0 := time.Now()
-	var sourceStr string
-	fmt.Scan(&sourceStr)
+	sourceStr := os.Args[1]
 
-	encodedStr := encode(sourceStr)
+	encodedStr, symCodes := encode(sourceStr)
 
 	for ch, code := range symCodes {
 		fmt.Println(string(ch) + ":", code)
 	}
 	fmt.Println(encodedStr)
-
-	decodedStr := decode(encodedStr)
-	fmt.Println(decodedStr)
-
 	fmt.Printf("Elapsed time: %v", time.Since(t0))
 }
