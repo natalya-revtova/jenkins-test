@@ -1,7 +1,8 @@
-package main
+package test
 
 import (
 	"testing"
+	"github.com/natalya-revtova/jenkins-test/app/cmd/huffman"
 )
 
 func TestDecodedString(t *testing.T) {
