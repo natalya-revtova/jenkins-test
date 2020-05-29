@@ -2,21 +2,14 @@
 
 node('master') {
     stage('Build') {
-        steps {
-            echo '> Building the application ...'
-            sh 'ls'
-            sh 'make build'
-        }
+        sh 'ls'
+        //sh 'make build'
     }
     stage('Lint') {
-        steps {
-            echo '> Linting the application ...'
-            sh 'make lint'
-        }
+        sh 'make lint'
     }
     stage('Test') {
         steps {
-            echo '> Testing the application ...'
             sh 'make test'
             sh 'make coverage'
             sh 'make clean'
