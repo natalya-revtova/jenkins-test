@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">C:\Natalya\Dell\Go\huffman.go (87.7%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package main
+
+import (
+        "container/heap"
+        "fmt"
+        "os"
+        "time"
+)
+
+type Tree interface {
+        Freq() int
+}
+
+type Leaf struct {
+        freq int
+        value rune
+}
+
+type Node struct {
+        freq        int
+        left, right Tree
+}
+
+func (leaf Leaf) Freq() int <span class="cov8" title="1">{
+        return leaf.freq
+}</span>
+
+func (node Node) Freq() int <span class="cov8" title="1">{
+        return node.freq
+}</span>
+
+type treeHeap []Tree
+
+func (th treeHeap) Len() int <span class="cov8" title="1">{ return len(th) }</span>
+func (th treeHeap) Less(i, j int) bool <span class="cov8" title="1">{
+        return th[i].Freq() &lt; th[j].Freq()
+}</span>
+func (th *treeHeap) Push(ele interface{}) <span class="cov8" title="1">{
+        *th = append(*th, ele.(Tree))
+}</span>
+func (th *treeHeap) Pop() (popped interface{}) <span class="cov8" title="1">{
+        popped = (*th)[len(*th)-1]
+        *th = (*th)[:len(*th)-1]
+        return
+}</span>
+func (th treeHeap) Swap(i, j int) <span class="cov8" title="1">{ th[i], th[j] = th[j], th[i] }</span>
+
+func walk(tree Tree, symCodes map[rune]string, prefix []byte) <span class="cov8" title="1">{
+        switch i := tree.(type) </span>{
+        case Leaf:<span class="cov8" title="1">
+                symCodes[i.value] = string(prefix)</span>
+        case Node:<span class="cov8" title="1">
+                prefix = append(prefix, '0')
+                walk(i.left, symCodes, prefix)
+                prefix = prefix[:len(prefix)-1]
+
+                prefix = append(prefix, '1')
+                walk(i.right, symCodes, prefix)</span>
+        }
+}
+
+func encode(sourceStr string) (string, map[rune]string) <span class="cov8" title="1">{
+        var tree treeHeap
+        symCodes := make(map[rune]string)
+        symFreqs := make(map[rune]int)
+        for _, ch := range sourceStr </span><span class="cov8" title="1">{
+                symFreqs[ch]++
+        }</span>
+
+        <span class="cov8" title="1">for ch, freq := range symFreqs </span><span class="cov8" title="1">{
+                tree = append(tree, Leaf{freq, ch})
+        }</span>
+        <span class="cov8" title="1">heap.Init(&amp;tree)
+
+        for len(tree) &gt; 1 </span><span class="cov8" title="1">{
+                a := heap.Pop(&amp;tree).(Tree)
+                b := heap.Pop(&amp;tree).(Tree)
+                heap.Push(&amp;tree, Node{a.Freq() + b.Freq(), a, b})
+        }</span>
+        <span class="cov8" title="1">if len(symFreqs) == 1 </span><span class="cov8" title="1">{
+                for ch := range symFreqs </span><span class="cov8" title="1">{
+                        symCodes[ch] = "0"
+                }</span>
+        } else<span class="cov8" title="1"> {
+                walk(heap.Pop(&amp;tree).(Tree), symCodes, []byte{})
+        }</span>
+        <span class="cov8" title="1">var encodedStr string
+        for _, ch := range sourceStr </span><span class="cov8" title="1">{
+                encodedStr += symCodes[ch]
+        }</span>
+        <span class="cov8" title="1">fmt.Println(len(symFreqs), len(encodedStr))
+
+        return encodedStr, symCodes</span>
+}
+
+func decode(encodedStr string, symCodes map[rune]string) string <span class="cov8" title="1">{
+        var decodedStr string
+        codes := make(map[string]string)
+
+        for ch, code := range symCodes </span><span class="cov8" title="1">{
+                codes[code] = string(ch)
+        }</span>
+
+        <span class="cov8" title="1">beg, end := 0, 1
+        for end &lt;= len(encodedStr) </span><span class="cov8" title="1">{
+                strChar := encodedStr[beg:end]
+                if code, ok := codes[strChar]; ok </span><span class="cov8" title="1">{
+                        decodedStr += code
+                        beg = end
+                        end++
+                }</span> else<span class="cov8" title="1"> {
+                        end++
+                }</span>
+        }
+        <span class="cov8" title="1">return decodedStr</span>
+}
+
+func main() <span class="cov0" title="0">{
+        t0 := time.Now()
+        sourceStr := os.Args[1]
+
+        encodedStr, symCodes := encode(sourceStr)
+
+        for ch, code := range symCodes </span><span class="cov0" title="0">{
+                fmt.Println(string(ch) + ":", code)
+        }</span>
+        <span class="cov0" title="0">fmt.Println(encodedStr)
+        fmt.Printf("Elapsed time: %v", time.Since(t0))</span>
+}</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
