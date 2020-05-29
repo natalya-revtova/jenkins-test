@@ -1,6 +1,4 @@
 .idea
 bin
-src
-pkg
 Go.iml
 .gitattributes

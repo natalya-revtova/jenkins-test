@@ -1,8 +1,10 @@
-package huffman
+package main
 
 import (
 	"container/heap"
 	"fmt"
+	"os"
+	"time"
 )
 
 type Tree interface {
@@ -57,7 +59,7 @@ func walk(tree Tree, symCodes map[rune]string, prefix []byte) {
 	}
 }
 
-func Encode(sourceStr string) (string, map[rune]string) {
+func encode(sourceStr string) (string, map[rune]string) {
 	var tree treeHeap
 	symCodes := make(map[rune]string)
 	symFreqs := make(map[rune]int)
@@ -91,7 +93,7 @@ func Encode(sourceStr string) (string, map[rune]string) {
 	return encodedStr, symCodes
 }
 
-func Decode(encodedStr string, symCodes map[rune]string) string {
+func decode(encodedStr string, symCodes map[rune]string) string {
 	var decodedStr string
 	codes := make(map[string]string)
 
@@ -111,4 +113,17 @@ func Decode(encodedStr string, symCodes map[rune]string) string {
 		}
 	}
 	return decodedStr
+}
+
+func main() {
+	t0 := time.Now()
+	sourceStr := os.Args[1]
+
+	encodedStr, symCodes := encode(sourceStr)
+
+	for ch, code := range symCodes {
+		fmt.Println(string(ch) + ":", code)
+	}
+	fmt.Println(encodedStr)
+	fmt.Printf("Elapsed time: %v", time.Since(t0))
 }
