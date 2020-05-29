@@ -1,14 +1,28 @@
 #!groovy
 
 node('master') {
+    stage('Git') {
+        steps {
+            echo '> Checking out the Git version control ...'
+            checkout scm
+        }
+    }
     stage('Build') {
-        sh 'make build'
+        steps {
+            echo '> Building the application ...'
+            sh 'ls'
+            sh 'make build'
+        }
     }
     stage('Lint') {
-        sh 'make lint'
+        steps {
+            echo '> Linting the application ...'
+            sh 'make lint'
+        }
     }
     stage('Test') {
         steps {
+            echo '> Testing the application ...'
             sh 'make test'
             sh 'make coverage'
             sh 'make clean'
