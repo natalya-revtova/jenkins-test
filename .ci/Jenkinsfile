@@ -2,7 +2,7 @@
 
 node('master') {
     stage('Build') {
-        sh 'make ./build'
+        sh 'make -sC build'
     }
     stage('Lint') {
         sh 'make lint'
