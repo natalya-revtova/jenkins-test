@@ -1,42 +1,40 @@
-package main
+package huffman
 
 import (
 	"container/heap"
 	"fmt"
-	"os"
-	"time"
 )
 
-type HuffmanTree interface {
+type Tree interface {
 	Freq() int
 }
 
-type HuffmanLeaf struct {
+type Leaf struct {
 	freq int
 	value rune
 }
 
-type HuffmanNode struct {
-	freq int
-	left, right HuffmanTree
+type Node struct {
+	freq        int
+	left, right Tree
 }
 
-func (leaf HuffmanLeaf) Freq() int {
+func (leaf Leaf) Freq() int {
 	return leaf.freq
 }
 
-func (node HuffmanNode) Freq() int {
+func (node Node) Freq() int {
 	return node.freq
 }
 
-type treeHeap []HuffmanTree
+type treeHeap []Tree
 
 func (th treeHeap) Len() int { return len(th) }
 func (th treeHeap) Less(i, j int) bool {
 	return th[i].Freq() < th[j].Freq()
 }
 func (th *treeHeap) Push(ele interface{}) {
-	*th = append(*th, ele.(HuffmanTree))
+	*th = append(*th, ele.(Tree))
 }
 func (th *treeHeap) Pop() (popped interface{}) {
 	popped = (*th)[len(*th)-1]
@@ -45,11 +43,11 @@ func (th *treeHeap) Pop() (popped interface{}) {
 }
 func (th treeHeap) Swap(i, j int) { th[i], th[j] = th[j], th[i] }
 
-func walk(tree HuffmanTree, symCodes map[rune]string, prefix []byte) {
+func walk(tree Tree, symCodes map[rune]string, prefix []byte) {
 	switch i := tree.(type) {
-	case HuffmanLeaf:
+	case Leaf:
 		symCodes[i.value] = string(prefix)
-	case HuffmanNode:
+	case Node:
 		prefix = append(prefix, '0')
 		walk(i.left, symCodes, prefix)
 		prefix = prefix[:len(prefix)-1]
@@ -69,21 +67,21 @@ func encode(sourceStr string) (string, map[rune]string) {
 	}
 
 	for ch, freq := range symFreqs {
-		tree = append(tree, HuffmanLeaf{freq, ch})
+		tree = append(tree, Leaf{freq, ch})
 	}
 	heap.Init(&tree)
 
 	for len(tree) > 1 {
-		a := heap.Pop(&tree).(HuffmanTree)
-		b := heap.Pop(&tree).(HuffmanTree)
-		heap.Push(&tree, HuffmanNode{a.Freq() + b.Freq(), a, b})
+		a := heap.Pop(&tree).(Tree)
+		b := heap.Pop(&tree).(Tree)
+		heap.Push(&tree, Node{a.Freq() + b.Freq(), a, b})
 	}
 	if len(symFreqs) == 1 {
 		for ch, _ := range symFreqs {
 			symCodes[ch] = "0"
 		}
 	} else {
-		walk(heap.Pop(&tree).(HuffmanTree), symCodes, []byte{})
+		walk(heap.Pop(&tree).(Tree), symCodes, []byte{})
 	}
 	var encodedStr string
 	for _, ch := range sourceStr {
@@ -114,17 +112,4 @@ func decode(encodedStr string, symCodes map[rune]string) string {
 		}
 	}
 	return decodedStr
-}
-
-func main() {
-	t0 := time.Now()
-	sourceStr := os.Args[1]
-
-	encodedStr, symCodes := encode(sourceStr)
-
-	for ch, code := range symCodes {
-		fmt.Println(string(ch) + ":", code)
-	}
-	fmt.Println(encodedStr)
-	fmt.Printf("Elapsed time: %v", time.Since(t0))
 }
