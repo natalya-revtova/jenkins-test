@@ -1,18 +1,23 @@
 #!groovy
 
-node('master') {
-    stage('Build') {
-        //sh 'make build'
+pipeline {
+    agent {
+        label 'master'
     }
-    stage('Lint') {
-        //sh 'make lint'
-    }
-    stage('Test') {
-        steps {
-            sh 'go test -cover -coverprofile=${TEST_DIR}/coverage.out'
-            //sh 'make test'
-            //sh 'make coverage'
-            //sh 'make clean'
+    stages {
+        stage('Build') {
+            //sh 'make build'
+        }
+        stage('Lint') {
+            //sh 'make lint'
+        }
+        stage('Test') {
+            steps {
+                sh 'go test -cover -coverprofile=${TEST_DIR}/coverage.out'
+                //sh 'make test'
+                //sh 'make coverage'
+                //sh 'make clean'
+            }
         }
     }
 }
