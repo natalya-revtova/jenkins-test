@@ -7,28 +7,24 @@ pipeline {
     stages {
         stage('Install') {
             steps {
-                sh 'go get -u "github.com/natalya-revtova/jenkins-test"'
-                //sh 'make install'
+                sh 'make install'
             }
         }
         stage('Build') {
             steps {
-                sh 'go build -o bin/huffman.exe huffman.go'
-                //sh 'make build'
+                sh 'make build'
             }
         }
         stage('Lint') {
             steps {
-                sh 'golangci-lint run'
-                //sh 'make lint'
+                sh 'make lint'
             }
         }
         stage('Test') {
             steps {
-                sh 'go test -cover -coverprofile=coverage.out'
-                //sh 'make test'
-                //sh 'make coverage'
-                //sh 'make clean'
+                sh 'make test'
+                sh 'make coverage'
+                sh 'make clean'
             }
         }
     }
