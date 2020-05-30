@@ -5,9 +5,15 @@ pipeline {
         label 'master'
     }
     stages {
+        stage('Install') {
+            steps {
+                sh 'go get -u "github.com/natalya-revtova/jenkins-test"'
+                //sh 'make install'
+            }
+        }
         stage('Build') {
             steps {
-                sh 'go build -o ${BIN_DIR}/${NAME}.exe ${NAME}.go'
+                sh 'go build -o bin/huffman.exe huffman.go'
                 //sh 'make build'
             }
         }
@@ -19,7 +25,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'go test -cover -coverprofile=${TEST_DIR}/coverage.out'
+                sh 'go test -cover -coverprofile=results/coverage.out'
                 //sh 'make test'
                 //sh 'make coverage'
                 //sh 'make clean'

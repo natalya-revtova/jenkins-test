@@ -5,6 +5,9 @@ BIN_DIR		:= ./bin
 
 .PHONY: all
 
+install:
+	go get -u "github.com/natalya-revtova/jenkins-test"
+
 build:
 	go build -o ${BIN_DIR}/${NAME}.exe ${NAME}.go
 
