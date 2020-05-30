@@ -101,12 +101,12 @@ func decode(encodedStr string, symCodes map[rune]string) string {
 		codes[code] = string(ch)
 	}
 
-	beg, end := 0, 1
+	begin, end := 0, 1
 	for end <= len(encodedStr) {
-		strChar := encodedStr[beg:end]
+		strChar := encodedStr[begin:end]
 		if code, ok := codes[strChar]; ok {
 			decodedStr += code
-			beg = end
+			begin = end
 			end++
 		} else {
 			end++
