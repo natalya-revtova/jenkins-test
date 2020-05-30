@@ -6,10 +6,14 @@ pipeline {
     }
     stages {
         stage('Build') {
-            //sh 'make build'
+            steps {
+                //sh 'make build'
+            }
         }
         stage('Lint') {
-            //sh 'make lint'
+            steps {
+                //sh 'make lint'
+            }
         }
         stage('Test') {
             steps {
