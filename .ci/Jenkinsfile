@@ -2,16 +2,17 @@
 
 node('master') {
     stage('Build') {
-        sh 'make build'
+        //sh 'make build'
     }
     stage('Lint') {
-        sh 'make lint'
+        //sh 'make lint'
     }
     stage('Test') {
         steps {
-            sh 'make test'
-            sh 'make coverage'
-            sh 'make clean'
+            sh 'go test -cover -coverprofile=${TEST_DIR}/coverage.out'
+            //sh 'make test'
+            //sh 'make coverage'
+            //sh 'make clean'
         }
     }
 }
