@@ -25,7 +25,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'go test -cover -coverprofile=results/coverage.out'
+                sh 'go test -cover -coverprofile=coverage.out'
                 //sh 'make test'
                 //sh 'make coverage'
                 //sh 'make clean'
