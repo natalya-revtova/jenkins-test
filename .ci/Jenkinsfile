@@ -28,4 +28,12 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            script {
+                sh 'cat codecov.yml | curl --data-binary @- https://codecov.io/validate'
+                sh 'curl -s https://codecov.io/bash | bash -s'
+            }
+        }
+    }
 }
