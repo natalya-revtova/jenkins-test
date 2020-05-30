@@ -14,10 +14,10 @@ lint:
 	golangci-lint run
 
 test:
-	go test -race -coverprofile=coverage.out -covermode=atomic
+	go test -cover -coverprofile=coverage.txt -covermode=atomic
 
 coverage:
-	go tool cover -html=coverage.out -o coverage.html
+	go tool cover -html=coverage.txt -o coverage.html
 
 clean:
 	go clean
