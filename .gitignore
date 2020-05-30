@@ -1,6 +1,7 @@
 .idea
 bin
 src
-results
 Go.iml
 .gitattributes
+coverage.html
+coverage.txt
