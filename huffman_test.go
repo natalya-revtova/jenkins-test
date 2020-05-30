@@ -1,8 +1,6 @@
 package main
 
-import (
-	"testing"
-)
+import "testing"
 
 func TestDecodedString(t *testing.T) {
 	sourceStr := "abacabad"
