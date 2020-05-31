@@ -15,6 +15,7 @@ lint:
 	golangci-lint run
 
 test:
+	mkdir ${OUT_DIR}
 	go test -coverprofile=${OUT_DIR}/coverage.txt -covermode=atomic
 
 coverage:
