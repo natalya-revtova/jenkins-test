@@ -16,10 +16,10 @@ lint:
 
 test:
 	mkdir ${OUT_DIR}
-	go test -cover -coverprofile=${OUT_DIR}coverage.txt
+	go test -cover -coverprofile=${OUT_DIR}/coverage.txt
 
 coverage:
-	go tool cover -html=${OUT_DIR}coverage.txt -o ${OUT_DIR}coverage.html
+	go tool cover -html=${OUT_DIR}/coverage.txt -o ${OUT_DIR}coverage.html
 
 clean:
 	go clean
