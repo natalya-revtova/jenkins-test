@@ -10,10 +10,12 @@ func TestDecodedString(t *testing.T) {
 	if decodedStr != sourceStr {
 		t.Error("For decoded string", "expected", sourceStr, "got", decodedStr)
 	}
+}
 
-	sourceStr = "a"
-	encodedStr, symCodes = encode(sourceStr)
-	decodedStr = decode(encodedStr, symCodes)
+func TestOneSymString(t *testing.T) {
+	sourceStr := "a"
+	encodedStr, symCodes := encode(sourceStr)
+	decodedStr := decode(encodedStr, symCodes)
 
 	if decodedStr != sourceStr {
 		t.Error("For decoded string", "expected", sourceStr, "got", decodedStr)
