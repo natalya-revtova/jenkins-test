@@ -14,6 +14,9 @@ pipeline {
     agent {
         label 'master'
     }
+    tools {
+        go 'go-1.14'
+    }
     stages {
         stage('Install') {
             steps {
@@ -25,16 +28,16 @@ pipeline {
                 sh 'make build'
             }
         }
-        stage('Lint') {
-            steps {
-                sh 'make lint'
-            }
-        }
-        stage('Test') {
+        stage('Tests') {
             steps {
                 sh 'make test'
                 sh 'make coverage'
                 sh 'make clean'
+            }
+        }
+        stage('Code Quality') {
+            steps {
+                sh 'make lint'
             }
         }
     }
