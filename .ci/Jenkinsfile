@@ -14,12 +14,6 @@ pipeline {
     agent {
         label 'master'
     }
-    tools {
-        go 'go-1.14'
-    }
-    environment {
-        GO111MODULE = 'on'
-    }
     stages {
         stage('Install') {
             steps {
