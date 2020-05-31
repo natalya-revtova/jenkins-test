@@ -14,7 +14,7 @@ lint:
 	golangci-lint run
 
 test:
-	go test -coverprofile=coverage.txt -covermode=atomic
+	go test -cover -coverprofile=coverage.txt
 
 coverage:
 	go tool cover -html=coverage.txt -o coverage.html
