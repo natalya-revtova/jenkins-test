@@ -20,7 +20,6 @@ pipeline {
     stages {
         stage('Install') {
             steps {
-                sh 'echo Installing packages...'
                 sh 'make install'
             }
         }
