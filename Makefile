@@ -1,7 +1,6 @@
 NAME	:= huffman
 
 BIN_DIR		:= ./bin
-OUT_DIR		:= ./reports
 
 .PHONY: all
 
@@ -15,11 +14,10 @@ lint:
 	golangci-lint run
 
 test:
-	mkdir ${OUT_DIR}
-	go test -coverprofile=${OUT_DIR}/coverage.txt -covermode=atomic
+	go test -coverprofile=coverage.txt -covermode=atomic
 
 coverage:
-	go tool cover -html=${OUT_DIR}/coverage.txt -o ${OUT_DIR}/coverage.html
+	go tool cover -html=coverage.txt -o coverage.html
 
 clean:
 	go clean
