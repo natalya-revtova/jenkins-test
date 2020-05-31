@@ -1,5 +1,15 @@
 #!groovy
 
+void setBuildStatus(String message, String state) {
+    step([
+            $class: "GitHubCommitStatusSetter",
+            reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/natalya-revtova/jenkins-test"],
+            contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "Go test"],
+            errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+            statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+    ]);
+}
+
 pipeline {
     agent {
         label 'master'
@@ -34,6 +44,12 @@ pipeline {
                 sh 'cat codecov.yml | curl --data-binary @- https://codecov.io/validate'
                 sh 'curl -s https://codecov.io/bash | bash -s'
             }
+        }
+        success {
+            setBuildStatus("Build succeeded", "SUCCESS");
+        }
+        failure {
+            setBuildStatus("Build failed", "FAILURE");
         }
     }
 }
