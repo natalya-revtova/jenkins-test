@@ -32,12 +32,12 @@ pipeline {
             steps {
                 sh 'make test'
                 sh 'make coverage'
-                sh 'make clean'
             }
         }
         stage('Code Quality') {
             steps {
                 sh 'make lint'
+                sh 'make clean'
             }
         }
     }
