@@ -127,6 +127,5 @@ func main() {
 		fmt.Println(string(char) + ":", code)
 	}
 	fmt.Println(encodedString)
-	fmt.Println(decode(encodedString, symbolCodes))
 	fmt.Printf("Elapsed time: %v", time.Since(t0))
 }
