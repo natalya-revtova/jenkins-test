@@ -59,71 +59,74 @@ func walk(tree Tree, symCodes map[rune]string, prefix []byte) {
 	}
 }
 
-func encode(sourceStr string) (string, map[rune]string) {
+func encode(sourceString string) (string, map[rune]string) {
 	var tree treeHeap
-	symCodes := make(map[rune]string)
-	symFreqs := make(map[rune]int)
-	for _, ch := range sourceStr {
-		symFreqs[ch]++
+	var encodedString string
+
+	symbolCodes := make(map[rune]string)
+	symbolFrequencies := make(map[rune]int)
+
+	for _, char := range sourceString {
+		symbolFrequencies[char]++
 	}
 
-	for ch, freq := range symFreqs {
-		tree = append(tree, Leaf{freq, ch})
+	for char, freq := range symbolFrequencies {
+		tree = append(tree, Leaf{freq, char})
 	}
 	heap.Init(&tree)
 
 	for len(tree) > 1 {
-		a := heap.Pop(&tree).(Tree)
-		b := heap.Pop(&tree).(Tree)
-		heap.Push(&tree, Node{a.Freq() + b.Freq(), a, b})
+		left := heap.Pop(&tree).(Tree)
+		tight := heap.Pop(&tree).(Tree)
+		heap.Push(&tree, Node{left.Freq() + tight.Freq(), left, tight})
 	}
-	if len(symFreqs) == 1 {
-		for ch := range symFreqs {
-			symCodes[ch] = "0"
+	if len(symbolFrequencies) == 1 {
+		for char := range symbolFrequencies {
+			symbolCodes[char] = "0"
 		}
 	} else {
-		walk(heap.Pop(&tree).(Tree), symCodes, []byte{})
+		walk(heap.Pop(&tree).(Tree), symbolCodes, []byte{})
 	}
-	var encodedStr string
-	for _, ch := range sourceStr {
-		encodedStr += symCodes[ch]
-	}
-	fmt.Println(len(symFreqs), len(encodedStr))
 
-	return encodedStr, symCodes
+	for _, char := range sourceString {
+		encodedString += symbolCodes[char]
+	}
+
+	return encodedString, symbolCodes
 }
 
-func decode(encodedStr string, symCodes map[rune]string) string {
-	var decodedStr string
-	codes := make(map[string]string)
+func decode(encodedString string, symbolCodes map[rune]string) string {
+	var decodedString string
+	symbolCodeAsKey := make(map[string]rune)
 
-	for ch, code := range symCodes {
-		codes[code] = string(ch)
+	for char, code := range symbolCodes {
+		symbolCodeAsKey[code] = char
 	}
 
 	begin, end := 0, 1
-	for end <= len(encodedStr) {
-		strChar := encodedStr[begin:end]
-		if code, ok := codes[strChar]; ok {
-			decodedStr += code
+	for end <= len(encodedString) {
+		substringAsCode := encodedString[begin:end]
+		if code, ok := symbolCodeAsKey[substringAsCode]; ok {
+			decodedString += string(code)
 			begin = end
 			end++
-		} else {
-			end++
+			continue
 		}
+		end++
 	}
-	return decodedStr
+	return decodedString
 }
 
 func main() {
 	t0 := time.Now()
-	sourceStr := os.Args[1]
+	sourceString := os.Args[1]
 
-	encodedStr, symCodes := encode(sourceStr)
+	encodedString, symbolCodes := encode(sourceString)
 
-	for ch, code := range symCodes {
-		fmt.Println(string(ch) + ":", code)
+	for char, code := range symbolCodes {
+		fmt.Println(string(char) + ":", code)
 	}
-	fmt.Println(encodedStr)
+	fmt.Println(encodedString)
+	fmt.Println(decode(encodedString, symbolCodes))
 	fmt.Printf("Elapsed time: %v", time.Since(t0))
 }
