@@ -20,7 +20,8 @@ pipeline {
     stages {
         stage('Install') {
             steps {
-                sh 'make install'
+                git branch: 'develop',
+                    url: 'https://github.com/natalya-revtova/jenkins-test'
             }
         }
         stage('Build') {
