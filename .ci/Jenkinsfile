@@ -30,22 +30,28 @@ pipeline {
         }
         stage('Tests') {
             steps {
-                sh 'make test'
-                sh 'make coverage'
+                sh ''' 
+                   make test
+                   make coverage
+                '''
             }
         }
         stage('Code Quality') {
             steps {
-                sh 'make lint'
-                sh 'make clean'
+                sh '''
+                   make lint
+                   make clean
+                '''
             }
         }
     }
     post {
         always {
             script {
-                sh 'cat codecov.yml | curl --data-binary @- https://codecov.io/validate'
-                sh 'curl -s https://codecov.io/bash | bash -s'
+                sh '''
+                   cat codecov.yml | curl --data-binary @- https://codecov.io/validate
+                   curl -s https://codecov.io/bash | bash -s
+                '''
             }
         }
         success {
